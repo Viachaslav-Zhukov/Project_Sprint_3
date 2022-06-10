@@ -12,7 +12,7 @@ import static org.apache.http.HttpStatus.*;
 import static org.hamcrest.Matchers.equalTo;
 
 @Story("Класс создания курьера и входа в систему с валидными учетными данными")
-public class CreatingCourierToLogInToTheSystemTest {
+public class CreatingACourierToLogInValidDataTest {
     private CourierClient courierClient;
     private Courier courier;
     private int courierId;
