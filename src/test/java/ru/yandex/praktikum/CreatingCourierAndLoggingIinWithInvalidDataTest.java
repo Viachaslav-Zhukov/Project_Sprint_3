@@ -93,8 +93,6 @@ public class CreatingCourierAndLoggingIinWithInvalidDataTest {
 
         Assert.assertEquals(SC_BAD_REQUEST, statusCode);
         Assert.assertEquals(expectedMessage, actualMessage);
-        //System.out.println(LoginResponse.body("Недостаточно данных для входа").asString());
-
     }
 
     @Test
