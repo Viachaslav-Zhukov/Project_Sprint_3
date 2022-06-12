@@ -23,11 +23,11 @@ public class OrderListTest {
     @Test
     @DisplayName("Получить список заказов клиента")
     public void getOrderList() {
-        var listОfOrdersResponse = orderClient.getOrderlist();
-        int statusCode = listОfOrdersResponse.extract().statusCode();
-        int ordersCount = listОfOrdersResponse.extract().path("pageInfo.total");
-        ArrayList<Integer> ordersId = listОfOrdersResponse.extract().path("orders.id");
-        ArrayList<String> availableStationsNames = listОfOrdersResponse.extract().path("availableStations.name");
+        var listOfOrdersResponse = orderClient.getOrderlist();
+        int statusCode = listOfOrdersResponse.extract().statusCode();
+        int ordersCount = listOfOrdersResponse.extract().path("pageInfo.total");
+        ArrayList<Integer> ordersId = listOfOrdersResponse.extract().path("orders.id");
+        ArrayList<String> availableStationsNames = listOfOrdersResponse.extract().path("availableStations.name");
 
         Assert.assertEquals(SC_OK, statusCode);
         Assert.assertNotEquals(0, ordersCount);

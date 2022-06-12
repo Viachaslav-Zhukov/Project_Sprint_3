@@ -9,8 +9,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.apache.http.HttpStatus.*;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
 
 @Story("Создание курьера с не валидными учетными данными")
 public class CreatingCourierAndLoggingIinWithInvalidDataTest {
@@ -25,13 +23,10 @@ public class CreatingCourierAndLoggingIinWithInvalidDataTest {
     }
 
     @Test
-    @Description("Создание курьера по уже созданным данным, с целью проверки создания курьера с повторяющим логином")
+    @Description("Создание курьера c помощью рандомного генератора, с целью проверки создания курьера с повторяющим логином")
     @DisplayName("Создание курьера с повторяющимся логином")
     public void createCourierWithDuplicateCredentials() {
-        Courier courier = new Courier();
-        courier.setLogin("vfhujif5");
-        courier.setPassword("1234");
-        courier.setFirstName("маргоша");
+        var createFirstCourier = courierClient.create(courier);
         var createSecondCourier = courierClient.create(courier);
         statusCode = createSecondCourier.extract().statusCode();
         String expectedMessage = "Этот логин уже используется. Попробуйте другой.";
@@ -42,6 +37,7 @@ public class CreatingCourierAndLoggingIinWithInvalidDataTest {
     }
 
     @Test
+    @Description("Создание курьера с нулевым значением в поле ввода login")
     @DisplayName("Запрос на создание курьера без логина")
     public void CreateCourierWithEmptyLogin() {
         courier.setLogin(null);
@@ -56,6 +52,7 @@ public class CreatingCourierAndLoggingIinWithInvalidDataTest {
     }
 
     @Test
+    @Description("Создание курьера с нулевым значением в поле ввода password")
     @DisplayName("Запрос на создание курьера без пароля")
     public void CreateCourierWithEmptyPassword() {
         courier.setPassword(null);
@@ -70,6 +67,7 @@ public class CreatingCourierAndLoggingIinWithInvalidDataTest {
     }
 
     @Test
+    @Description("Создание курьера с нулевым значением в поле ввода login и password")
     @DisplayName("Запрос на создание курьера без логина и пароля")
     public void CreateCourierWithEmptyCredentials() {
         courier.setLogin(null);
@@ -85,6 +83,7 @@ public class CreatingCourierAndLoggingIinWithInvalidDataTest {
     }
 
     @Test
+    @Description("Вход в систему с пустым значением в поле ввода login")
     @DisplayName("Запрос без логина")
     public void courierLoginWithEmptyLogin() {
         ValidatableResponse LoginResponse = courierClient.loginIsNotValid(new CourierCredentials("", courier.getPassword()));
@@ -92,12 +91,14 @@ public class CreatingCourierAndLoggingIinWithInvalidDataTest {
         String expectedMessage = "Недостаточно данных для входа";
         String actualMessage = LoginResponse.extract().path("message");
 
-        assertThat("The courier is logged in", statusCode, equalTo(SC_BAD_REQUEST));
+        Assert.assertEquals(SC_BAD_REQUEST, statusCode);
         Assert.assertEquals(expectedMessage, actualMessage);
+        //System.out.println(LoginResponse.body("Недостаточно данных для входа").asString());
 
     }
 
     @Test
+    @Description("Вход в систему с пустым значением в поле ввода password")
     @DisplayName("Запрос без пароля")
     public void courierLoginWithEmptyPassword() {
         ValidatableResponse LoginResponse = courierClient.loginIsNotValid(new CourierCredentials(courier.getLogin(), ""));
@@ -105,12 +106,13 @@ public class CreatingCourierAndLoggingIinWithInvalidDataTest {
         String expectedMessage = "Недостаточно данных для входа";
         String actualMessage = LoginResponse.extract().path("message");
 
-        assertThat("The courier is logged in", statusCode, equalTo(SC_BAD_REQUEST));
+        Assert.assertEquals(SC_BAD_REQUEST, statusCode);
         Assert.assertEquals(expectedMessage, actualMessage);
 
     }
 
     @Test
+    @Description("Вход в систему с пустым значением в поле ввода login и password")
     @DisplayName("Запрос без логина и пароля")
     public void courierLoginWithEmptyLoginPassword() {
         ValidatableResponse LoginResponse = courierClient.loginIsNotValid(new CourierCredentials("", ""));
@@ -118,12 +120,13 @@ public class CreatingCourierAndLoggingIinWithInvalidDataTest {
         String expectedMessage = "Недостаточно данных для входа";
         String actualMessage = LoginResponse.extract().path("message");
 
-        assertThat("The courier is logged in", statusCode, equalTo(SC_BAD_REQUEST));
+        Assert.assertEquals(SC_BAD_REQUEST, statusCode);
         Assert.assertEquals(expectedMessage, actualMessage);
 
     }
 
     @Test
+    @Description("Вход в систему с несуществующим значением в поле ввода login")
     @DisplayName("Запрос с несуществующим логином")
     public void CourierLoginWithNonExistentLogin() {
         ValidatableResponse loginResponse = courierClient.loginIsNotValid(new CourierCredentials(courier.getLogin().concat("vfhujifvfhujif"), courier.getPassword()));
@@ -131,12 +134,13 @@ public class CreatingCourierAndLoggingIinWithInvalidDataTest {
         String expectedMessage = "Учетная запись не найдена";
         String actualMessage = loginResponse.extract().path("message");
 
-        assertThat("The courier is logged in", statusCode, equalTo(SC_NOT_FOUND));
+        Assert.assertEquals(SC_NOT_FOUND, statusCode);
         Assert.assertEquals(expectedMessage, actualMessage);
 
     }
 
     @Test
+    @Description("Вход в систему с несуществующим значением в поле ввода password")
     @DisplayName("Запрос с несуществующим паролем")
     public void CourierLoginWithNonExistentPassword() {
         ValidatableResponse loginResponse = courierClient.loginIsNotValid(new CourierCredentials(courier.getLogin(), courier.getPassword().concat("vfhujif2022")));
@@ -144,12 +148,13 @@ public class CreatingCourierAndLoggingIinWithInvalidDataTest {
         String expectedMessage = "Учетная запись не найдена";
         String actualMessage = loginResponse.extract().path("message");
 
-        assertThat("The courier is logged in", statusCode, equalTo(SC_NOT_FOUND));
+        Assert.assertEquals(SC_NOT_FOUND, statusCode);
         Assert.assertEquals(expectedMessage, actualMessage);
 
     }
 
     @Test
+    @Description("Вход в систему с несуществующим значением в поле ввода login и password")
     @DisplayName("Запрос с несуществующей парой логином-пароль")
     public void CourierLoginWithNonExistentLoginPassword() {
         ValidatableResponse loginResponse = courierClient.loginIsNotValid(new CourierCredentials(courier.getLogin().concat("vfhbghjbvujif"), courier.getPassword().concat("vfhujif202213")));
@@ -157,7 +162,7 @@ public class CreatingCourierAndLoggingIinWithInvalidDataTest {
         String expectedMessage = "Учетная запись не найдена";
         String actualMessage = loginResponse.extract().path("message");
 
-        assertThat("The courier is logged in", statusCode, equalTo(SC_NOT_FOUND));
+        Assert.assertEquals(SC_NOT_FOUND, statusCode);
         Assert.assertEquals(expectedMessage, actualMessage);
 
     }

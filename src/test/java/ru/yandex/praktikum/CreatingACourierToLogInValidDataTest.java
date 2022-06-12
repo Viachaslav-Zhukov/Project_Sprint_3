@@ -45,6 +45,7 @@ public class CreatingACourierToLogInValidDataTest {
     }
 
     @Test
+    @Description("Вход курьера в систему с валидными учетными данными с помощью рандомного генератора")
     @DisplayName("Вход курьера в систему с валидными учетными данными")
     public void LogInWithValidCredentials() {
         var loginResponse = courierClient.login(new CourierCredentials(courier.getLogin(), courier.getPassword()));
